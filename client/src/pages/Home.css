@@ -1,0 +1,87 @@
+.welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.header {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 10vh;
+  max-height: 70px;
+  background-color: #ff3cac;
+  background-image: linear-gradient(
+    225deg,
+    #ff3cac 0%,
+    #784ba0 50%,
+    #2b86c5 100%
+  );
+
+  align-items: center;
+  font-size: large;
+}
+.logo {
+  width: 70px;
+  height: 40px;
+  justify-self: flex-start;
+  background-image: url("../assets/corporate-identity.png");
+  background-size: 40px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.logo-text {
+  justify-self: left;
+  width: 40%;
+}
+.menu {
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  justify-self: flex-end;
+  justify-content: space-between;
+}
+.labels {
+  display: flex;
+  width: 58%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.dashboard {
+  display: flex;
+  flex-direction: row;
+}
+.image {
+  background-image: url("https://images.unsplash.com/photo-1645809599934-2c3946e6f686?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1587&q=80");
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 60%;
+  height: 100vh;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 22%;
+}
+
+.button-login {
+  height: 40px;
+  width: 80px;
+  background-color: #2b85c565;
+  border: 1px solid black;
+  border-radius: 20px;
+  font-size: medium;
+}
+
+.button-register {
+  height: 40px;
+  width: 80px;
+  background-color: #3b98dac7;
+  border: 1px solid whitesmoke;
+  color: whitesmoke;
+  border-radius: 20px;
+  font-size: medium;
+}
