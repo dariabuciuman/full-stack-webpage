@@ -1,3 +1,4 @@
+const { authenticateRole } = require("./middlewares");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -11,6 +12,10 @@ app.use(express.json());
 
 mongoose.connect("mongodb://localhost:27017/full-stack-login");
 
+app.get("/api/admin", authenticateRole(["admin"]), async (req, res) => {
+  res.json("THIS IS DA ADMIN PAGE");
+});
+
 app.post("/api/register", async (req, res) => {
   console.log(req.body);
 
@@ -20,6 +25,7 @@ app.post("/api/register", async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       password: newPassword,
+      role: req.body.role,
     });
     res.json({ status: "ok" });
   } catch (error) {
@@ -44,6 +50,7 @@ app.post("/api/login", async (req, res) => {
       {
         name: user.name,
         email: user.email,
+        role: user.role,
       },
       "secret123"
     );

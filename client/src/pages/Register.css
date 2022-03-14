@@ -1,4 +1,4 @@
-.dashboard {
+.registerForm {
   background-image: url("../assets/nubelson-fernandes-Y376h7VN27c-unsplash.jpg");
   height: 100vh;
   background-size: cover;
@@ -6,6 +6,9 @@
   display: flex;
   flex-direction: column;
 }
-.dashboard {
-  justify-self: start;
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }

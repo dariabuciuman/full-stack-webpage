@@ -5,7 +5,5 @@
   color: #ffffff;
   display: flex;
   flex-direction: column;
-}
-.dashboard {
-  justify-self: start;
+  justify-content: center;
 }

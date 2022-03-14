@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import jwt from "jsonwebtoken";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -9,6 +10,20 @@ const Dashboard = () => {
   const [tempQuote, setTempQuote] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [tempPhoneNumber, setTempPhoneNumber] = useState("");
+
+  const userData = localStorage.getItem("token");
+  let jwtData = userData.split(".")[1];
+  let decodedJWT = window.atob(jwtData);
+  let decodedData = JSON.parse(decodedJWT);
+  let role = decodedData.role;
+
+  // async function populateRole() {
+  //   if (data.status === "ok") {
+  //     setRole(role);
+  //   } else {
+  //     alert(data.error);
+  //   }
+  // }
 
   async function populateQuote() {
     const req = await fetch("http://localhost:5000/api/quote", {
@@ -132,6 +147,7 @@ const Dashboard = () => {
         <br />
         <input type="submit" value="Update phone number" />
       </form>
+      <h1>Your role: {role || "No role founfd"}</h1>
     </div>
   );
 };

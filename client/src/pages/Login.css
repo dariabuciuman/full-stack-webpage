@@ -1,0 +1,13 @@
+.login-page {
+  background-image: url("../assets/nubelson-fernandes-Y376h7VN27c-unsplash.jpg");
+  height: 100vh;
+  background-size: cover;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
