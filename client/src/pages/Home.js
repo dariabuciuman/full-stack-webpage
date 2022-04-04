@@ -8,8 +8,8 @@ function Home() {
   console.log(localStorage.getItem("token"));
   return (
     <div className="home">
-      <Navbar bg="dark" expand="lg" variant="dark">
-        <Container>
+      <Navbar className="navbar" expand="lg" fixed="top">
+        <div className="container">
           <Navbar.Brand href="/">PC Shop</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -35,7 +35,7 @@ function Home() {
               <Nav.Link href="/register">Sign Up</Nav.Link>
             </Nav>
           </Navbar.Collapse>
-        </Container>
+        </div>
       </Navbar>
       <div className="dashboard">
         <div className="hello">

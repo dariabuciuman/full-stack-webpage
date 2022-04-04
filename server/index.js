@@ -7,14 +7,12 @@ const User = require("./models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
+require("dotenv").config();
+
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/full-stack-login");
-
-app.get("/api/admin", authenticateRole(["admin"]), async (req, res) => {
-  res.json("THIS IS DA ADMIN PAGE");
-});
+mongoose.connect(process.env.DB_URI);
 
 app.post("/api/register", async (req, res) => {
   console.log(req.body);
@@ -52,7 +50,7 @@ app.post("/api/login", async (req, res) => {
         email: user.email,
         role: user.role,
       },
-      "secret123"
+      process.env.JWT_PRIVATE_KEY
     );
     return res.json({ status: "ok", user: token });
   } else {
@@ -64,7 +62,7 @@ app.get("/api/quote", async (req, res) => {
   const token = req.headers["x-acces-token"];
 
   try {
-    const decoded = jwt.verify(token, "secret123");
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
     const email = decoded.email;
     const user = await User.findOne({ email: email });
 
@@ -79,7 +77,7 @@ app.post("/api/quote", async (req, res) => {
   const token = req.headers["x-acces-token"];
 
   try {
-    const decoded = jwt.verify(token, "secret123");
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
     const email = decoded.email;
     await User.updateOne({ email: email }, { $set: { quote: req.body.quote } });
 
@@ -94,7 +92,7 @@ app.get("/api/phoneNumber", async (req, res) => {
   const token = req.headers["x-acces-token"];
 
   try {
-    const decoded = jwt.verify(token, "secret123");
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
     const email = decoded.email;
     const user = await User.findOne({ email: email });
 
@@ -109,7 +107,7 @@ app.post("/api/phoneNumber", async (req, res) => {
   const token = req.headers["x-acces-token"];
 
   try {
-    const decoded = jwt.verify(token, "secret123");
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
     const email = decoded.email;
     await User.updateOne(
       { email: email },
@@ -123,6 +121,44 @@ app.post("/api/phoneNumber", async (req, res) => {
   }
 });
 
+app.get("/api/admin", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    console.log("role: " + user.role);
+    if (user.role === "admin") {
+      console.log("is admin");
+      return res.json({ status: "ok", authorized: "true" });
+    }
+  } catch (error) {
+    return res.json({ status: "error", error: "Unauthorized" });
+  }
+  h;
+});
+
+app.get("/api/admin/getUsers", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    //const users = "[";
+    if (user.role === "admin") {
+      console.log("before querry");
+      const users = await User.find(
+        {},
+        { _id: 0, password: 0, __v: 0, quote: 0, phoneNumber: 0 }
+      );
+      console.log("after querry " + users);
+      return res.json({ status: "ok", users: users });
+    }
+  } catch (error) {
+    return res.json({ status: "error", error: "Unauthorized" });
+  }
+});
 app.listen(5000, () => {
   console.log("Server started on port 5000");
 });

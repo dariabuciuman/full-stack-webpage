@@ -1,6 +1,6 @@
 .dashboard {
   background-image: url("../assets/nubelson-fernandes-Y376h7VN27c-unsplash.jpg");
-  height: 100vh;
+  height: 120vh;
   background-size: cover;
   color: #ffffff;
   display: flex;
@@ -8,4 +8,12 @@
 }
 .dashboard {
   justify-self: start;
+}
+.navbar {
+  background-color: rgb(192, 192, 192);
+}
+.container {
+  display: flex;
+  justify-content: center;
+  color: red;
 }

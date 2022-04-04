@@ -10,12 +10,13 @@ const Dashboard = () => {
   const [tempQuote, setTempQuote] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [tempPhoneNumber, setTempPhoneNumber] = useState("");
+  const [admin, setAdmin] = useState("");
 
-  const userData = localStorage.getItem("token");
-  let jwtData = userData.split(".")[1];
-  let decodedJWT = window.atob(jwtData);
-  let decodedData = JSON.parse(decodedJWT);
-  let role = decodedData.role;
+  // const userData = localStorage.getItem("token");
+  // let jwtData = userData.split(".")[1];
+  // let decodedJWT = window.atob(jwtData);
+  // let decodedData = JSON.parse(decodedJWT);
+  // let role = decodedData.role;
 
   // async function populateRole() {
   //   if (data.status === "ok") {
@@ -24,6 +25,31 @@ const Dashboard = () => {
   //     alert(data.error);
   //   }
   // }
+
+  async function verifyAdmin() {
+    const req = await fetch("http://localhost:5000/api/admin", {
+      headers: {
+        "admin-access-token": localStorage.getItem("token"),
+      },
+    });
+    const data = await req.json();
+    if (data.status === "ok" && data.authorized === "true") {
+      setAdmin(true);
+    } else setAdmin(false);
+  }
+
+  async function redirectToAdmin(event) {
+    event.preventDefault();
+    const req = await fetch("http://localhost:5000/api/admin", {
+      headers: {
+        "admin-access-token": localStorage.getItem("token"),
+      },
+    });
+    const data = await req.json();
+    if (data.status === "ok" && data.authorized === "true") {
+      window.location.href = "/admin";
+    } else console.log("Just user");
+  }
 
   async function populateQuote() {
     const req = await fetch("http://localhost:5000/api/quote", {
@@ -64,6 +90,9 @@ const Dashboard = () => {
       } else {
         populateQuote();
         populatePhoneNumber();
+        verifyAdmin();
+        //const admin = await isAdmin().then();
+        //console.log("admin? :" + isAdmin());
       }
     } else {
       console.log("else");
@@ -115,6 +144,9 @@ const Dashboard = () => {
 
   return (
     <div>
+      <form onSubmit={redirectToAdmin}>
+        {admin && <input type="submit" value="Admin" />}
+      </form>
       <button
         onClick={() => {
           localStorage.removeItem("token");
@@ -147,7 +179,7 @@ const Dashboard = () => {
         <br />
         <input type="submit" value="Update phone number" />
       </form>
-      <h1>Your role: {role || "No role founfd"}</h1>
+      <h1>Your role: {"No role founfd"}</h1>
     </div>
   );
 };
