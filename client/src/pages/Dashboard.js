@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./Dashboard.css";
+import LoggedInHeader from "../utils/LoggedInHeader";
+import AdminHeader from "../utils/AdminHeader";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -11,20 +13,6 @@ const Dashboard = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [tempPhoneNumber, setTempPhoneNumber] = useState("");
   const [admin, setAdmin] = useState("");
-
-  // const userData = localStorage.getItem("token");
-  // let jwtData = userData.split(".")[1];
-  // let decodedJWT = window.atob(jwtData);
-  // let decodedData = JSON.parse(decodedJWT);
-  // let role = decodedData.role;
-
-  // async function populateRole() {
-  //   if (data.status === "ok") {
-  //     setRole(role);
-  //   } else {
-  //     alert(data.error);
-  //   }
-  // }
 
   async function verifyAdmin() {
     const req = await fetch("http://localhost:5000/api/admin", {
@@ -36,19 +24,6 @@ const Dashboard = () => {
     if (data.status === "ok" && data.authorized === "true") {
       setAdmin(true);
     } else setAdmin(false);
-  }
-
-  async function redirectToAdmin(event) {
-    event.preventDefault();
-    const req = await fetch("http://localhost:5000/api/admin", {
-      headers: {
-        "admin-access-token": localStorage.getItem("token"),
-      },
-    });
-    const data = await req.json();
-    if (data.status === "ok" && data.authorized === "true") {
-      window.location.href = "/admin";
-    } else console.log("Just user");
   }
 
   async function populateQuote() {
@@ -91,8 +66,6 @@ const Dashboard = () => {
         populateQuote();
         populatePhoneNumber();
         verifyAdmin();
-        //const admin = await isAdmin().then();
-        //console.log("admin? :" + isAdmin());
       }
     } else {
       console.log("else");
@@ -143,43 +116,34 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
-      <form onSubmit={redirectToAdmin}>
-        {admin && <input type="submit" value="Admin" />}
-      </form>
-      <button
-        onClick={() => {
-          localStorage.removeItem("token");
-          navigate("/", { replace: true });
-        }}
-        type="button"
-      >
-        Log Out
-      </button>
-      <h1> Your quote: {quote || "No Quote found"} </h1>
-      <form onSubmit={updateQuote}>
-        <input
-          type="text"
-          placeholder="Quote"
-          value={tempQuote}
-          onChange={(e) => setTempQuote(e.target.value)}
-        />
+    <div className="everything">
+      {admin ? <AdminHeader></AdminHeader> : <LoggedInHeader></LoggedInHeader>}
+      <div className="dashboard">
+        <h1> Your quote: {quote || "No Quote found"} </h1>
+        <form onSubmit={updateQuote}>
+          <input
+            type="text"
+            placeholder="Quote"
+            value={tempQuote}
+            onChange={(e) => setTempQuote(e.target.value)}
+          />
+          <br />
+          <input type="submit" value="Update quote" />
+        </form>
         <br />
-        <input type="submit" value="Update quote" />
-      </form>
-      <br />
-      <h1> Your phone number: {phoneNumber || "No phone number found"} </h1>
-      <form onSubmit={updatePhoneNumber}>
-        <input
-          type="text"
-          placeholder="Phone Number"
-          value={tempPhoneNumber}
-          onChange={(e) => setTempPhoneNumber(e.target.value)}
-        />
-        <br />
-        <input type="submit" value="Update phone number" />
-      </form>
-      <h1>Your role: {"No role founfd"}</h1>
+        <h1> Your phone number: {phoneNumber || "No phone number found"} </h1>
+        <form onSubmit={updatePhoneNumber}>
+          <input
+            type="text"
+            placeholder="Phone Number"
+            value={tempPhoneNumber}
+            onChange={(e) => setTempPhoneNumber(e.target.value)}
+          />
+          <br />
+          <input type="submit" value="Update phone number" />
+        </form>
+        <h1>Your role: {"No role founfd"}</h1>
+      </div>
     </div>
   );
 };

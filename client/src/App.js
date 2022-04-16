@@ -7,7 +7,6 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProtectedRoutes from "./ProtectedRoutes";
-import ProtectedAdminRoutes from "./ProtectedAdminRoutes";
 
 const App = () => {
   return (

@@ -1,4 +1,3 @@
-const { authenticateRole } = require("./middlewares");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -128,15 +127,12 @@ app.get("/api/admin", async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
     const email = decoded.email;
     const user = await User.findOne({ email: email });
-    console.log("role: " + user.role);
     if (user.role === "admin") {
-      console.log("is admin");
       return res.json({ status: "ok", authorized: "true" });
     }
   } catch (error) {
     return res.json({ status: "error", error: "Unauthorized" });
   }
-  h;
 });
 
 app.get("/api/admin/getUsers", async (req, res) => {
@@ -145,20 +141,70 @@ app.get("/api/admin/getUsers", async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
     const email = decoded.email;
     const user = await User.findOne({ email: email });
-    //const users = "[";
     if (user.role === "admin") {
-      console.log("before querry");
       const users = await User.find(
         {},
         { _id: 0, password: 0, __v: 0, quote: 0, phoneNumber: 0 }
       );
-      console.log("after querry " + users);
       return res.json({ status: "ok", users: users });
     }
   } catch (error) {
     return res.json({ status: "error", error: "Unauthorized" });
   }
 });
+
+app.delete("/api/admin/deleteUser", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  console.log(req.headers.user_email);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      try {
+        const deleted = await User.deleteOne({ email: req.headers.user_email });
+        return res.json({ status: "ok", state: deleted });
+      } catch (error) {
+        console.log(error);
+      }
+    } else return res.json({ status: "error" });
+  } catch (error) {
+    return res.json({ status: "error", error: "Couldn't delete user" });
+  }
+});
+
+app.put("/api/admin/changeUser", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      if (user.email === req.headers.user_email) {
+        return res.json({
+          status: "error",
+          error: "Can't change role for the current user",
+        });
+      } else
+        try {
+          const updated = await User.updateOne(
+            {
+              email: req.headers.user_email,
+            },
+            {
+              $set: { role: req.headers.new_role },
+            }
+          );
+          return res.json({ status: "ok", state: "updated" });
+        } catch (error) {
+          console.log(error);
+        }
+    } else return res.json({ status: "error" });
+  } catch (error) {
+    return res.json({ status: "error", error: "Couldn't update user role" });
+  }
+});
+
 app.listen(5000, () => {
   console.log("Server started on port 5000");
 });

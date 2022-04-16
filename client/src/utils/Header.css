@@ -1,0 +1,11 @@
+.navbar {
+  background-color: red;
+  /* color: aqua; */
+}
+
+.container {
+  color: aqua;
+}
+.navbar .navbar-text {
+  color: aqua;
+}
