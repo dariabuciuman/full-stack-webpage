@@ -55,21 +55,6 @@ const Header = () => {
             <Nav.Link className="navbar-text" href="/shop">
               Shop
             </Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item className="navbar-text" href="/login">
-                Login
-              </NavDropdown.Item>
-              <NavDropdown.Item className="navbar-text" href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item className="navbar-text" href="#action/3.3">
-                Something
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
           </Nav>
           <Nav>
             {!loggedIn && (
@@ -83,20 +68,25 @@ const Header = () => {
               </Nav.Link>
             )}
             {loggedIn && (
-              <Nav.Link
-                className="navbar-text"
-                href="/"
-                onClick={() => {
-                  localStorage.removeItem("token");
-                }}
+              <NavDropdown
+                title="My Account"
+                id="basic-nav-dropdown"
+                menuVariant="dark"
               >
-                Logout
-              </Nav.Link>
-            )}
-            {loggedIn && (
-              <Nav.Link className="navbar-text" href="/account">
-                Account
-              </Nav.Link>
+                <NavDropdown.Item className="navbar-text" href="/account">
+                  Profile
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item
+                  className="navbar-text"
+                  href="/"
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                  }}
+                >
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
             )}
             {admin && (
               <Nav.Link className="navbar-text" href="/admin">

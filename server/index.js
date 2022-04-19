@@ -96,7 +96,25 @@ app.post("/api/admin/addProduct", async (req, res) => {
   }
 });
 
-app.get("/api/getImage", async (req, res) => {});
+app.get("/api/getProducts", async (req, res) => {
+  try {
+    const products = await Product.find({}, { _id: 0, __v: 0 });
+    return res.json({ status: "ok", products: products });
+  } catch (error) {
+    res.send({ status: "error", error: error });
+  }
+});
+
+app.get("/api/getImage", async (req, res) => {
+  const imageName = req.headers["image_name"];
+  let file = "D:/UniStuff/web-developing/mern login signup/server/images/";
+  file += imageName;
+  console.log("file: " + file);
+  //let fileLocation = path.join("../server/images/", file);
+  //console.log("file: " + fileLocation);
+  //res.send({image: fileLocation});
+  res.sendFile(`${file}`);
+});
 
 app.post("/api/register", async (req, res) => {
   console.log(req.body);
