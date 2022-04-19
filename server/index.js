@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/user.model");
+const Product = require("./models/product.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -202,6 +203,28 @@ app.put("/api/admin/changeUser", async (req, res) => {
     } else return res.json({ status: "error" });
   } catch (error) {
     return res.json({ status: "error", error: "Couldn't update user role" });
+  }
+});
+
+app.post("/api/admin/addProduct", async (req, res) => {
+  console.log(req.body);
+
+  try {
+    await Product.create({
+      name: req.body.name,
+      manufacturer: req.body.manufacturer,
+      description: req.body.description,
+      image: req.body.image,
+      categories: req.body.categories,
+      size: req.body.size,
+      color: req.body.color,
+      price: req.body.price,
+      countInStock: req.body.countInStock,
+    });
+    res.json({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", error: "Cannot add product" });
   }
 });
 

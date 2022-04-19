@@ -15,6 +15,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import AddProductDialog from "../utils/AddProductDialog";
 
 const Admin = () => {
   const [users, setUsers] = useState("");
@@ -189,6 +190,7 @@ const Admin = () => {
           </React.Fragment>
         </div>
       )}
+      <AddProductDialog></AddProductDialog>
     </div>
   );
 };
