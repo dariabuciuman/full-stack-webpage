@@ -7,14 +7,96 @@ const Product = require("./models/product.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
-const upload = multer({ dest: "./images" });
+//const upload = multer({ dest: "./images" });
 
 require("dotenv").config();
-
-app.use(cors());
+const corsConfig = {
+  credentials: true,
+  origin: true,
+};
+app.use(cors(corsConfig));
 app.use(express.json());
 
 mongoose.connect(process.env.DB_URI);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "./images");
+  },
+
+  filename: function (req, file, callback) {
+    callback(null, file.originalname);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+});
+
+app.post(
+  "/api/admin/uploadImage",
+  upload.single("image"),
+  async (req, res) => {
+    const token = req.headers["admin-access-token"];
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+      const email = decoded.email;
+      const user = await User.findOne({ email: email });
+      if (user.role === "admin") {
+        if (!req.file) {
+          console.log("No file received");
+          return res.status(400).send({ error: error.message });
+        } else {
+          const host = req.hostname;
+          console.log("host name: " + host);
+          const filePath =
+            req.protocol + "://" + host + ":5000/" + req.file.path;
+          console.log("file received, filepath " + filePath);
+
+          return res.send(req.file);
+        }
+      }
+    } catch (error) {
+      return res.json({ status: "error", error: "Unauthorized" });
+    }
+  },
+  (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+  }
+);
+
+app.post("/api/admin/addProduct", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      try {
+        await Product.create({
+          id: req.body.id,
+          name: req.body.name,
+          manufacturer: req.body.manufacturer,
+          description: req.body.description,
+          image: req.body.image,
+          categories: req.body.categories,
+          size: req.body.size,
+          color: req.body.color,
+          price: req.body.price,
+          countInStock: req.body.countInStock,
+        });
+        return res.json({ status: "ok", state: "updated" });
+      } catch (error) {
+        console.log(error);
+      }
+    } else return res.json({ status: "Unauthorized" });
+  } catch (error) {
+    return res.json({ status: "error", error: "Couldn't add product" });
+  }
+});
+
+app.get("/api/getImage", async (req, res) => {});
 
 app.post("/api/register", async (req, res) => {
   console.log(req.body);

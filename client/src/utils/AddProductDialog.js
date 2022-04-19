@@ -16,6 +16,7 @@ import Chip from "@mui/material/Chip";
 
 export default function AddProductDialog() {
   const [open, setOpen] = React.useState(false);
+  const [productID, setProductID] = React.useState("");
   const [productName, setProductName] = React.useState("");
   const [manufacturer, setManufacturer] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -62,6 +63,9 @@ export default function AddProductDialog() {
   }
   const theme = useTheme();
 
+  const addID = (event) => {
+    setProductID(event.target.value);
+  };
   const addName = (event) => {
     setProductName(event.target.value);
   };
@@ -103,6 +107,48 @@ export default function AddProductDialog() {
   };
 
   async function addProduct() {
+    let fileName = "product_" + productID + ".jpg";
+    const formData = new FormData();
+    formData.append("image", image, fileName);
+
+    const res = await fetch("http://localhost:5000/api/admin/uploadImage", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "multipart/form-data",
+        "admin-access-token": localStorage.getItem("token"),
+      },
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("Uploaded");
+      })
+      .catch((err) => console.error(err));
+
+    const req = await fetch("http://localhost:5000/api/admin/addProduct", {
+      method: "POST",
+      headers: {
+        "admin-access-token": localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: productID,
+        name: productName,
+        manufacturer: manufacturer,
+        description: description,
+        image: fileName,
+        categories: categoryName,
+        size: productSize,
+        color: productColor,
+        price: productPrice,
+        countInStock: countInStock,
+      }),
+    });
+    const data = await req.json();
+    if (data.status === "ok") {
+      console.log("Product added");
+    } else alert(data.error);
     console.log(
       productName + " " + manufacturer + " " + description + " " + productSize
     );
@@ -129,6 +175,16 @@ export default function AddProductDialog() {
             To subscribe to this website, please enter your email address here.
             We will send updates occasionally.
           </DialogContentText>
+          <TextField
+            required
+            margin="dense"
+            id="id"
+            label="Product ID"
+            type="text"
+            fullWidth
+            variant="standard"
+            onChange={addID}
+          />
           <TextField
             required
             margin="dense"
