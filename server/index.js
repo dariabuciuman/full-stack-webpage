@@ -6,6 +6,8 @@ const User = require("./models/user.model");
 const Product = require("./models/product.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const multer = require("multer");
+const upload = multer({ dest: "./images" });
 
 require("dotenv").config();
 

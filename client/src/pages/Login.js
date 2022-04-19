@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
+import Header from "../utils/Header";
 import "./Login.css";
 
 function Login() {
@@ -34,35 +34,7 @@ function Login() {
 
   return (
     <div className="login-page">
-      <Navbar bg="dark" expand="lg" variant="dark">
-        <Container>
-          <Navbar.Brand href="/">PC Shop</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/login">Login</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">
-                  Something
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-            <Nav>
-              <Nav.Link href="/login">Login</Nav.Link>
-              <Nav.Link href="/register">Sign Up</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <Header />
       <div className="loginForm">
         <h1>Login</h1>
         <h3>Welcome back, it's grape to see you.</h3>

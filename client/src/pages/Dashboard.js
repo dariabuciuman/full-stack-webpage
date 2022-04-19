@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./Dashboard.css";
-import LoggedInHeader from "../utils/LoggedInHeader";
-import AdminHeader from "../utils/AdminHeader";
+import Header from "../utils/Header";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -12,19 +11,6 @@ const Dashboard = () => {
   const [tempQuote, setTempQuote] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [tempPhoneNumber, setTempPhoneNumber] = useState("");
-  const [admin, setAdmin] = useState("");
-
-  async function verifyAdmin() {
-    const req = await fetch("http://localhost:5000/api/admin", {
-      headers: {
-        "admin-access-token": localStorage.getItem("token"),
-      },
-    });
-    const data = await req.json();
-    if (data.status === "ok" && data.authorized === "true") {
-      setAdmin(true);
-    } else setAdmin(false);
-  }
 
   async function populateQuote() {
     const req = await fetch("http://localhost:5000/api/quote", {
@@ -65,7 +51,6 @@ const Dashboard = () => {
       } else {
         populateQuote();
         populatePhoneNumber();
-        verifyAdmin();
       }
     } else {
       console.log("else");
@@ -117,7 +102,7 @@ const Dashboard = () => {
 
   return (
     <div className="everything">
-      {admin ? <AdminHeader></AdminHeader> : <LoggedInHeader></LoggedInHeader>}
+      <Header />
       <div className="dashboard">
         <h1> Your quote: {quote || "No Quote found"} </h1>
         <form onSubmit={updateQuote}>

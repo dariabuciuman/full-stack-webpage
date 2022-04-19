@@ -1,7 +1,6 @@
 import React from "react";
 import MaterialTable from "material-table";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import tableIcons from "../utils/MaterialTableIcons";
 import "./Admin.css";
 import Box from "@mui/material/Box";
@@ -16,13 +15,13 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import AddProductDialog from "../utils/AddProductDialog";
+import Header from "../utils/Header";
 
 const Admin = () => {
   const [users, setUsers] = useState("");
   const [open, setOpen] = React.useState(false);
   const [role, setRole] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const navigate = useNavigate();
 
   const handleClickOpen = (email, role) => {
     setRole(role);
@@ -103,94 +102,87 @@ const Admin = () => {
 
   return (
     <div>
-      <h1>Admin Page</h1>
-      <button
-        onClick={() => {
-          localStorage.removeItem("token");
-          navigate("/", { replace: true });
-        }}
-        type="button"
-      >
-        Log Out
-      </button>
-      <form onSubmit={loadUsers}>
-        <input type={"submit"} value="Get users"></input>
-      </form>
-      {users && (
-        <div>
-          <MaterialTable
-            actions={[
-              {
-                icon: tableIcons.Delete,
-                tooltip: "Delete User",
-                onClick: (event, rowData) => {
-                  alert("You want to delete " + rowData.email);
-                  deleteButton(rowData.email);
+      <Header />
+      <div className="page">
+        <form onSubmit={loadUsers}>
+          <input type={"submit"} value="Get users"></input>
+        </form>
+        {users && (
+          <div>
+            <MaterialTable
+              actions={[
+                {
+                  icon: tableIcons.Delete,
+                  tooltip: "Delete User",
+                  onClick: (event, rowData) => {
+                    alert("You want to delete " + rowData.email);
+                    deleteButton(rowData.email);
+                  },
                 },
-              },
-              {
-                icon: tableIcons.Edit,
-                tooltip: "Change User",
-                onClick: (event, rowData) => {
-                  handleClickOpen(rowData.email, rowData.role);
+                {
+                  icon: tableIcons.Edit,
+                  tooltip: "Change User",
+                  onClick: (event, rowData) => {
+                    handleClickOpen(rowData.email, rowData.role);
+                  },
                 },
-              },
-            ]}
-            icons={tableIcons}
-            title="User list"
-            columns={columns}
-            data={users}
-          />
-          <React.Fragment>
-            <Dialog
-              fullWidth={100}
-              maxWidth="md"
-              open={open}
-              onClose={handleClose}
-            >
-              <DialogTitle>Edit user role</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Select the role you want for the user. You cannot change your
-                  own role.
-                </DialogContentText>
-                <Box
-                  noValidate
-                  component="form"
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    m: "auto",
-                    width: "fit-content",
-                  }}
-                >
-                  <FormControl sx={{ mt: 2, minWidth: 120, maxWidth: 200 }}>
-                    <InputLabel htmlFor="max-width">role</InputLabel>
-                    <Select
-                      autoFocus
-                      value={role}
-                      onChange={handleChange}
-                      label="maxWidth"
-                      inputProps={{
-                        name: "max-width",
-                        id: "max-width",
-                      }}
-                    >
-                      <MenuItem value="user">user</MenuItem>
-                      <MenuItem value="admin">admin</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={saveChange}>Save</Button>
-                <Button onClick={handleClose}>Cancel</Button>
-              </DialogActions>
-            </Dialog>
-          </React.Fragment>
-        </div>
-      )}
-      <AddProductDialog></AddProductDialog>
+              ]}
+              icons={tableIcons}
+              title="User list"
+              columns={columns}
+              data={users}
+            />
+            <React.Fragment>
+              <Dialog
+                fullWidth={100}
+                maxWidth="md"
+                open={open}
+                onClose={handleClose}
+              >
+                <DialogTitle>Edit user role</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Select the role you want for the user. You cannot change
+                    your own role.
+                  </DialogContentText>
+                  <Box
+                    noValidate
+                    component="form"
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      m: "auto",
+                      width: "fit-content",
+                    }}
+                  >
+                    <FormControl sx={{ mt: 2, minWidth: 120, maxWidth: 200 }}>
+                      <InputLabel htmlFor="max-width">role</InputLabel>
+                      <Select
+                        autoFocus
+                        value={role}
+                        onChange={handleChange}
+                        label="maxWidth"
+                        inputProps={{
+                          name: "max-width",
+                          id: "max-width",
+                        }}
+                      >
+                        <MenuItem value="user">user</MenuItem>
+                        <MenuItem value="admin">admin</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={saveChange}>Save</Button>
+                  <Button onClick={handleClose}>Cancel</Button>
+                </DialogActions>
+              </Dialog>
+            </React.Fragment>
+          </div>
+        )}
+        <AddProductDialog></AddProductDialog>
+      </div>
     </div>
   );
 };
