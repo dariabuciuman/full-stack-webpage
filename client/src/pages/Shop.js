@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import jwt from "jsonwebtoken";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "./Dashboard.css";
+import "./Shop.css";
 import Header from "../utils/Header";
+import ProductCard from "../utils/ProductCard";
 
-const Dashboard = () => {
+const Shop = () => {
   const navigate = useNavigate();
   const [quote, setQuote] = useState("");
   const [tempQuote, setTempQuote] = useState("");
@@ -101,36 +102,22 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="everything">
+    <div className="everything1">
       <Header />
-      <div className="dashboard">
-        <h1> Your quote: {quote || "No Quote found"} </h1>
-        <form onSubmit={updateQuote}>
-          <input
-            type="text"
-            placeholder="Quote"
-            value={tempQuote}
-            onChange={(e) => setTempQuote(e.target.value)}
-          />
-          <br />
-          <input type="submit" value="Update quote" />
-        </form>
-        <br />
-        <h1> Your phone number: {phoneNumber || "No phone number found"} </h1>
-        <form onSubmit={updatePhoneNumber}>
-          <input
-            type="text"
-            placeholder="Phone Number"
-            value={tempPhoneNumber}
-            onChange={(e) => setTempPhoneNumber(e.target.value)}
-          />
-          <br />
-          <input type="submit" value="Update phone number" />
-        </form>
-        <h1>Your role: {"No role founfd"}</h1>
+      <div className="shop">
+        <h1>Shop page</h1>
+        <div className="products">
+          <ProductCard></ProductCard>
+          <ProductCard></ProductCard>
+          <ProductCard></ProductCard>
+          <ProductCard></ProductCard>
+          <ProductCard></ProductCard>
+          <ProductCard></ProductCard>
+          <ProductCard></ProductCard>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default Shop;

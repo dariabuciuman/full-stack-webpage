@@ -52,7 +52,7 @@ const Header = () => {
             <Nav.Link className="navbar-text" href="/">
               Home
             </Nav.Link>
-            <Nav.Link className="navbar-text" href="/dashboard">
+            <Nav.Link className="navbar-text" href="/shop">
               Shop
             </Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
@@ -91,6 +91,11 @@ const Header = () => {
                 }}
               >
                 Logout
+              </Nav.Link>
+            )}
+            {loggedIn && (
+              <Nav.Link className="navbar-text" href="/account">
+                Account
               </Nav.Link>
             )}
             {admin && (

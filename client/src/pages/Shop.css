@@ -1,0 +1,19 @@
+.everything1 {
+  background-color: rgb(54, 54, 54);
+  height: 100vh;
+  color: #f8f8f8;
+}
+.shop {
+  height: 90vh;
+  padding-top: 7vh;
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+}
+.products {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
