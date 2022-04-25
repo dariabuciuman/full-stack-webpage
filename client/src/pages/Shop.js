@@ -13,21 +13,29 @@ import { Button, CardActionArea, CardActions } from "@mui/material";
 const Shop = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [images, setImages] = useState([]);
   const [tempQuote, setTempQuote] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [tempPhoneNumber, setTempPhoneNumber] = useState("");
+  const [image, setImage] = useState(undefined);
 
   async function getImage(imageName) {
     try {
-      const res = await fetch("http://localhost:5000/api/getImage", {
-        method: "GET",
-        headers: {
-          image_name: imageName,
-          "Content-Type": "image/jpeg",
-        },
-      });
+      console.log("imageName: " + imageName);
+      const res = await fetch(
+        `http://localhost:5000/api/fetchImage/${imageName}`,
+        {
+          method: "GET",
+          headers: {
+            image_name: imageName,
+            "Content-Type": "image/jpeg",
+          },
+        }
+      );
       const blob = await res.blob();
-      return [URL.createObjectURL(blob), null];
+      var imageUrl = URL.createObjectURL(blob);
+      setImage(imageUrl);
+      return imageUrl;
     } catch (error) {
       console.error(`get: error occurred ${error}`);
       return [null, error];
@@ -43,10 +51,25 @@ const Shop = () => {
     const data = await req.json();
     if (data.status === "ok") {
       setProducts(data.products);
-      console.log(products);
+      var arr = [];
+      data.products.map((product, index) => {
+        getImage(product.image).then((imageUrl) => {
+          arr.push(imageUrl);
+        });
+      });
+      console.log(arr);
+      setImages(arr);
+      reverseImages();
     } else {
       alert(data.error);
     }
+  }
+
+  function reverseImages() {
+    var img = images;
+    console.log(img);
+    img.reverse();
+    console.log(img);
   }
 
   useEffect(() => {
@@ -60,7 +83,7 @@ const Shop = () => {
         navigate("/login", { replace: true });
       } else {
         populateProducts();
-        //console.log(products.match("image: "));
+        //getImage("product_2.jpg").then((value) => setImage(value));
       }
     } else {
       console.log("else");
@@ -94,6 +117,10 @@ const Shop = () => {
       <Header />
       <div className="shop">
         <h1>Shop page</h1>
+        <ul>
+          <li>{images[0]}</li>
+          <li>{images[1]}</li>
+        </ul>
         <div className="products">
           {products.map((product, index) => (
             <div key={index}>
@@ -102,7 +129,8 @@ const Shop = () => {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={getImage(product.image)}
+                    //image="adefhs"
+                    src={images[index]}
                     alt="green iguana"
                   />
                   <CardContent>
