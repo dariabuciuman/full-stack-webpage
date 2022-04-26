@@ -14,14 +14,9 @@ const Shop = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [images, setImages] = useState([]);
-  const [tempQuote, setTempQuote] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [tempPhoneNumber, setTempPhoneNumber] = useState("");
-  const [image, setImage] = useState(undefined);
 
   async function getImage(imageName) {
     try {
-      console.log("imageName: " + imageName);
       const res = await fetch(
         `http://localhost:5000/api/fetchImage/${imageName}`,
         {
@@ -34,7 +29,6 @@ const Shop = () => {
       );
       const blob = await res.blob();
       var imageUrl = URL.createObjectURL(blob);
-      setImage(imageUrl);
       return imageUrl;
     } catch (error) {
       console.error(`get: error occurred ${error}`);
@@ -51,25 +45,19 @@ const Shop = () => {
     const data = await req.json();
     if (data.status === "ok") {
       setProducts(data.products);
-      var arr = [];
-      data.products.map((product, index) => {
-        getImage(product.image).then((imageUrl) => {
-          arr.push(imageUrl);
-        });
-      });
-      console.log(arr);
-      setImages(arr);
-      reverseImages();
+      console.log(data.products);
+      const res = await Promise.all(
+        data.products.map((item, index) =>
+          getImage(item.image).then((imageUrl) => {
+            return imageUrl;
+          })
+        )
+      );
+      console.log(res);
+      setImages(res);
     } else {
       alert(data.error);
     }
-  }
-
-  function reverseImages() {
-    var img = images;
-    console.log(img);
-    img.reverse();
-    console.log(img);
   }
 
   useEffect(() => {
@@ -83,7 +71,6 @@ const Shop = () => {
         navigate("/login", { replace: true });
       } else {
         populateProducts();
-        //getImage("product_2.jpg").then((value) => setImage(value));
       }
     } else {
       console.log("else");
@@ -91,36 +78,11 @@ const Shop = () => {
     }
   }, []);
 
-  async function updatePhoneNumber(event) {
-    event.preventDefault();
-    const req = await fetch("http://localhost:5000/api/phoneNumber", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-acces-token": localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        phoneNumber: tempPhoneNumber,
-      }),
-    });
-    const data = await req.json();
-    if (data.status === "ok") {
-      setPhoneNumber(tempPhoneNumber);
-      setTempPhoneNumber("");
-    } else {
-      alert(data.error);
-    }
-  }
-
   return (
     <div className="everything1">
       <Header />
       <div className="shop">
         <h1>Shop page</h1>
-        <ul>
-          <li>{images[0]}</li>
-          <li>{images[1]}</li>
-        </ul>
         <div className="products">
           {products.map((product, index) => (
             <div key={index}>
@@ -129,7 +91,6 @@ const Shop = () => {
                   <CardMedia
                     component="img"
                     height="140"
-                    //image="adefhs"
                     src={images[index]}
                     alt="green iguana"
                   />

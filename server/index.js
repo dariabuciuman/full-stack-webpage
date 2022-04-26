@@ -106,6 +106,30 @@ app.get("/api/getProducts", async (req, res) => {
   }
 });
 
+app.get("/api/getImages", async (req, res) => {
+  try {
+    const images = await Product.find(
+      {},
+      {
+        _id: 0,
+        __v: 0,
+        id: 0,
+        name: 0,
+        description: 0,
+        manufacturer: 0,
+        categories: 0,
+        size: 0,
+        color: 0,
+        price: 0,
+        countInStock: 0,
+      }
+    );
+    return res.json({ status: "ok", images: images });
+  } catch (error) {
+    res.send({ status: "error", error: error });
+  }
+});
+
 app.get("/api/fetchImage/:file(*)", async (req, res) => {
   const imageName = req.headers["image_name"];
   let file = req.params.file;
