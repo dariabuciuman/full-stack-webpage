@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import jwt from "jsonwebtoken";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import "./Shop.css";
 import Header from "../utils/Header";
@@ -9,11 +9,20 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
+import { makeStyles } from "@material-ui/core/styles";
 
 const Shop = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [images, setImages] = useState([]);
+
+  const useStyles = makeStyles({
+    root: {
+      backgroundColor: "red",
+    },
+  });
+
+  const classes = useStyles();
 
   async function getImage(imageName) {
     try {
@@ -86,32 +95,36 @@ const Shop = () => {
         <div className="products">
           {products.map((product, index) => (
             <div key={index}>
-              <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    src={images[index]}
-                    alt="green iguana"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {product.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {product.description}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {product.image}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions>
-                  <Button size="small" color="primary">
-                    Share
-                  </Button>
-                </CardActions>
-              </Card>
+              <Link
+                to={{
+                  pathname: `/shop/${product.id}`,
+                  state: { product: product.id },
+                }}
+              >
+                <Card sx={{ width: 300, height: 400 }} className={classes.root}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      src={images[index]}
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {product.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {product.price}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                  <CardActions>
+                    <Button size="small" color="primary">
+                      Share
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Link>
             </div>
           ))}
         </div>

@@ -133,8 +133,6 @@ app.get("/api/getImages", async (req, res) => {
 app.get("/api/fetchImage/:file(*)", async (req, res) => {
   const imageName = req.headers["image_name"];
   let file = req.params.file;
-  let file1 = "D:/UniStuff/web-developing/mern login signup/server/images/";
-  //file += imageName;
   console.log("file: " + file);
   let fileLocation = path.join("./images/", file);
   console.log("fileLocation: " + fileLocation);

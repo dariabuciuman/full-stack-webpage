@@ -8,6 +8,7 @@ import Admin from "./pages/Admin";
 import Shop from "./pages/Shop";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProtectedRoutes from "./ProtectedRoutes";
+import Product from "./pages/Product";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/login" exact element={<Login />} />
           <Route path="/register" exact element={<Register />} />
           <Route path="/shop" exact element={<Shop />} />
+          <Route path="/shop/:id" exact element={<Product />} />
           <Route element={<ProtectedRoutes />}>
             <Route path="/account" exact element={<Account />} />
             <Route path="/admin" exact element={<Admin />} />
