@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Shop from "./pages/Shop";
+import Users from "./pages/Users";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Product from "./pages/Product";
@@ -23,6 +24,7 @@ const App = () => {
           <Route element={<ProtectedRoutes />}>
             <Route path="/account" exact element={<Account />} />
             <Route path="/admin" exact element={<Admin />} />
+            <Route path="/users" exact element={<Users />} />
           </Route>
         </Routes>
       </BrowserRouter>

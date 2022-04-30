@@ -16,19 +16,13 @@ const Shop = (props) => {
   const [products, setProducts] = useState([]);
   const [images, setImages] = useState([]);
 
-  const useStyles = makeStyles({
-    root: {
-      backgroundColor: "red",
-    },
-  });
+  // const useStyles = makeStyles({
+  //   root: {
+  //     backgroundColor: "red",
+  //   },
+  // });
 
-  const classes = useStyles();
-
-  const data1 = {
-    from: "Link #1",
-    message: "Welcome to KindaCode.com",
-    timestamp: Date.now(),
-  };
+  // const classes = useStyles();
 
   async function getImage(imageName) {
     try {
@@ -107,7 +101,10 @@ const Shop = (props) => {
                 }}
                 state={{ product: product }}
               >
-                <Card sx={{ width: 300, height: 400 }} className={classes.root}>
+                <Card
+                  sx={{ width: 300, height: 400 }}
+                  className="{classes.root}"
+                >
                   <CardActionArea>
                     <CardMedia
                       component="img"

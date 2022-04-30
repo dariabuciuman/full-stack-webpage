@@ -89,9 +89,21 @@ const Header = () => {
               </NavDropdown>
             )}
             {admin && (
-              <Nav.Link className="navbar-text" href="/admin">
-                Admin
-              </Nav.Link>
+              <NavDropdown
+                title="Admin"
+                id="basic-nav-dropdown"
+                menuVariant="dark"
+              >
+                <NavDropdown.Item className="navbar-text" href="/users">
+                  Users
+                </NavDropdown.Item>
+                <NavDropdown.Item className="navbar-text" href="/products">
+                  Products
+                </NavDropdown.Item>
+                <NavDropdown.Item className="navbar-text" href="/orders">
+                  Orders
+                </NavDropdown.Item>
+              </NavDropdown>
             )}
           </Nav>
         </Navbar.Collapse>

@@ -1,0 +1,20 @@
+.page {
+  font-family: "Poppins", sans-serif;
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+}
+.form {
+  padding-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+.refresh-button {
+  border-style: none;
+  font-weight: 400;
+  height: 3rem;
+  width: 6rem;
+  background-color: #212529;
+  color: #fdf9f0;
+  border-radius: 30px;
+}

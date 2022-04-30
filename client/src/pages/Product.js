@@ -57,9 +57,25 @@ const Product = (props) => {
     <div className="product-page">
       <Header />
       <div className="product-dash">
-        <img src={image} className="product-img"></img>
-        <h1> {state.product.name} </h1>
-        <h1>Your role: {"No role founfd"}</h1>
+        <div className="product-img-area">
+          <img
+            src={image}
+            className="product-img"
+            alt={state.product.name}
+          ></img>
+        </div>
+        <div className="product-text">
+          <h1>{state.product.manufacturer}</h1>
+          <h2> {state.product.name} </h2>
+          <div className="product-price">
+            <p>{"PRICE: "}</p>
+            <h2> {" " + state.product.price} RON </h2>
+          </div>
+          <p>{state.product.description}</p>
+          <div className="product-buttons">
+            <button className="add-to-cart">Add to cart</button>
+          </div>
+        </div>
       </div>
     </div>
   );
