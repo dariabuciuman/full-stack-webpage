@@ -1,0 +1,15 @@
+.product-page {
+  background-color: #f8f8f8;
+  height: 100vh;
+  margin-top: 60px;
+  color: #0f0f0f;
+}
+.product-dash {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.product-img {
+  height: 400px;
+}

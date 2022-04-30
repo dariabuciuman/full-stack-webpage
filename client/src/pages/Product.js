@@ -5,9 +5,33 @@ import { useState } from "react";
 import "./Product.css";
 import Header from "../utils/Header";
 
-const Product = () => {
+const Product = (props) => {
+  const [image, setImage] = useState("");
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const location = useLocation();
+  const { state } = location;
+
+  async function getImage(imageName) {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/fetchImage/${imageName}`,
+        {
+          method: "GET",
+          headers: {
+            image_name: imageName,
+            "Content-Type": "image/jpeg",
+          },
+        }
+      );
+      const blob = await res.blob();
+      var imageUrl = URL.createObjectURL(blob);
+      setImage(imageUrl);
+      return imageUrl;
+    } catch (error) {
+      console.error(`get: error occurred ${error}`);
+      return [null, error];
+    }
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -19,7 +43,9 @@ const Product = () => {
         localStorage.removeItem("token");
         navigate("/login", { replace: true });
       } else {
-        console.log();
+        getImage(state.product.image);
+        console.log(state);
+        console.log(state.product.name);
       }
     } else {
       console.log("else");
@@ -28,10 +54,11 @@ const Product = () => {
   }, []);
 
   return (
-    <div className="everything">
+    <div className="product-page">
       <Header />
-      <div className="dashboard">
-        <h1> Product [age] </h1>
+      <div className="product-dash">
+        <img src={image} className="product-img"></img>
+        <h1> {state.product.name} </h1>
         <h1>Your role: {"No role founfd"}</h1>
       </div>
     </div>

@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 
-const Shop = () => {
+const Shop = (props) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [images, setImages] = useState([]);
@@ -23,6 +23,12 @@ const Shop = () => {
   });
 
   const classes = useStyles();
+
+  const data1 = {
+    from: "Link #1",
+    message: "Welcome to KindaCode.com",
+    timestamp: Date.now(),
+  };
 
   async function getImage(imageName) {
     try {
@@ -98,8 +104,8 @@ const Shop = () => {
               <Link
                 to={{
                   pathname: `/shop/${product.id}`,
-                  state: { product: product.id },
                 }}
+                state={{ product: product }}
               >
                 <Card sx={{ width: 300, height: 400 }} className={classes.root}>
                   <CardActionArea>
