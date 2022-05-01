@@ -14,8 +14,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 
-export default function AddProductDialog() {
-  const [open, setOpen] = React.useState(false);
+export default function AddProductDialog({
+  isDialogOpened,
+  handleCloseDialog,
+}) {
   const [productID, setProductID] = React.useState("");
   const [productName, setProductName] = React.useState("");
   const [manufacturer, setManufacturer] = React.useState("");
@@ -98,14 +100,6 @@ export default function AddProductDialog() {
     setCategoryName(typeof value === "string" ? value.split(",") : value);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   async function addProduct() {
     let fileName = "product_" + productID + ".jpg";
     const formData = new FormData();
@@ -160,15 +154,16 @@ export default function AddProductDialog() {
   const handleAdd = () => {
     alert("Add product");
     addProduct();
-    setOpen(false);
+    handleCloseDialog(false);
+  };
+
+  const handleClose = () => {
+    handleCloseDialog(false);
   };
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Add Product
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={isDialogOpened} onClose={handleClose}>
         <DialogTitle>Add product</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -230,7 +225,13 @@ export default function AddProductDialog() {
               />
             }
             renderValue={(selected) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 0.5,
+                }}
+              >
                 {selected.map((value) => (
                   <Chip key={value} label={value} />
                 ))}

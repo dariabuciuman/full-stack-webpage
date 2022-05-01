@@ -125,16 +125,16 @@ const Users = () => {
               {
                 icon: tableIcons.Delete,
                 tooltip: "Delete User",
-                onClick: (rowData) => {
-                  alert("You want to delete " + rowData.email);
-                  deleteButton(rowData.email);
+                onClick: (event, row) => {
+                  alert("You want to delete " + row.email);
+                  deleteButton(row.email);
                 },
               },
               {
                 icon: tableIcons.Edit,
                 tooltip: "Change User",
-                onClick: (rowData) => {
-                  handleClickOpen(rowData.email, rowData.role);
+                onClick: (event, row) => {
+                  handleClickOpen(row.email, row.role);
                 },
               },
             ]}

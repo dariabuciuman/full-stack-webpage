@@ -110,7 +110,7 @@ const Shop = (props) => {
                       component="img"
                       height="200"
                       src={images[index]}
-                      alt="green iguana"
+                      alt={product.name}
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">

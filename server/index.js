@@ -106,6 +106,26 @@ app.get("/api/getProducts", async (req, res) => {
   }
 });
 
+app.delete("/api/admin/deleteProduct", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  console.log(req.headers.product_id);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      try {
+        const deleted = await Product.deleteOne({ id: req.headers.product_id });
+        return res.json({ status: "ok", state: deleted });
+      } catch (error) {
+        console.log(error);
+      }
+    } else return res.json({ status: "error" });
+  } catch (error) {
+    return res.json({ status: "error", error: "Couldn't delete product" });
+  }
+});
+
 app.get("/api/getImages", async (req, res) => {
   try {
     const images = await Product.find(
