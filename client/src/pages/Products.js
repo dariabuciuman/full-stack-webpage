@@ -76,6 +76,11 @@ const Products = () => {
     navigate();
   }
 
+  function loadProducts(event) {
+    event.preventDefault();
+    populateProducts();
+  }
+
   const handleOpen = () => {
     setIsOpen(!isOpen);
   };
@@ -115,6 +120,7 @@ const Products = () => {
           columns={columns}
           data={products}
           options={{
+            grouping: true,
             headerStyle: {
               backgroundColor: "#21252904",
               color: "#000",
@@ -130,6 +136,13 @@ const Products = () => {
           isDialogOpened={isOpen}
           handleCloseDialog={() => setIsOpen(false)}
         ></AddProductDialog>
+        <form className="form" onSubmit={loadProducts}>
+          <input
+            className="refresh-button"
+            type={"submit"}
+            value="Refresh"
+          ></input>
+        </form>
       </div>
     </div>
   );

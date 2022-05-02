@@ -290,16 +290,12 @@ export default function AddProductDialog({
             onChange={addStock}
           />
           <label htmlFor="contained-button-file">
-            <Input
+            <input
               accept="image/*"
               id="contained-button-file"
-              multiple
               type="file"
               onChange={addImage}
             />
-            <Button variant="contained" component="span">
-              Upload Image
-            </Button>
           </label>
         </DialogContent>
         <DialogActions>

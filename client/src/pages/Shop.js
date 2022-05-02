@@ -96,34 +96,49 @@ const Shop = (props) => {
           {products.map((product, index) => (
             <div key={index}>
               <Link
+                style={{ textDecoration: "none" }}
                 to={{
                   pathname: `/shop/${product.id}`,
                 }}
                 state={{ product: product }}
               >
                 <Card
-                  sx={{ width: 300, height: 400 }}
+                  sx={{ width: 250, height: 400 }}
                   className="{classes.root}"
                 >
                   <CardActionArea>
                     <CardMedia
                       component="img"
-                      height="200"
+                      height="230"
                       src={images[index]}
                       alt={product.name}
+                      sx={{ objectFit: "contain" }}
                     />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
+                    <CardContent
+                      sx={{
+                        margin: -1,
+                      }}
+                    >
+                      <Typography
+                        sx={{ fontSize: "16px" }}
+                        gutterBottom
+                        variant="h6"
+                        component="div"
+                      >
                         {product.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {product.price}
+                      <Typography
+                        sx={{ alignContent: "center" }}
+                        variant="h5"
+                        color="#000"
+                      >
+                        {product.price + " RON"}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
                   <CardActions>
                     <Button size="small" color="primary">
-                      Share
+                      Add to cart
                     </Button>
                   </CardActions>
                 </Card>

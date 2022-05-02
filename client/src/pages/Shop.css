@@ -1,19 +1,30 @@
 .everything1 {
   background-color: #212529de;
-  height: 100vh;
+  min-height: 100vh;
   color: #f8f8f8;
 }
 .shop {
-  height: 90vh;
+  min-height: 90vh;
   padding-top: 7vh;
   display: flex;
   flex-direction: column;
   justify-self: center;
 }
 .products {
-  padding: 10px;
+  padding: 1rem;
+  margin: 2rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  column-gap: 1rem;
+  row-gap: 2rem;
 }
+/* {
+  overflow: hidden;
+    text-overflow: ellipsis;
+    height: 57px;
+    white-space: initial;
+    word-break: break-word;
+    color: inherit;
+} */

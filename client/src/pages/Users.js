@@ -143,6 +143,7 @@ const Users = () => {
             columns={columns}
             data={users}
             options={{
+              grouping: true,
               headerStyle: {
                 backgroundColor: "#21252904",
                 color: "#000",
