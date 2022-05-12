@@ -5,11 +5,13 @@ import { useState } from "react";
 import "./Shop.css";
 import Header from "../utils/Header";
 import Card from "@mui/material/Card";
+import IconButton from "@mui/material/IconButton";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
+import ShoppingCartOutlined from "@material-ui/icons/ShoppingCartOutlined";
 
 const Shop = (props) => {
   const navigate = useNavigate();
@@ -91,20 +93,26 @@ const Shop = (props) => {
     <div className="everything1">
       <Header />
       <div className="shop">
-        <h1>Shop page</h1>
         <div className="products">
           {products.map((product, index) => (
             <div key={index}>
-              <Link
-                style={{ textDecoration: "none" }}
-                to={{
-                  pathname: `/shop/${product.id}`,
+              <Card
+                sx={{
+                  width: 250,
+                  height: 400,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  textDecoration: "none",
                 }}
-                state={{ product: product }}
+                className="{classes.root}"
               >
-                <Card
-                  sx={{ width: 250, height: 400 }}
-                  className="{classes.root}"
+                <Link
+                  style={{ textDecoration: "none" }}
+                  to={{
+                    pathname: `/shop/${product.id}`,
+                  }}
+                  state={{ product: product }}
                 >
                   <CardActionArea>
                     <CardMedia
@@ -117,6 +125,7 @@ const Shop = (props) => {
                     <CardContent
                       sx={{
                         margin: -1,
+                        color: "#000",
                       }}
                     >
                       <Typography
@@ -127,22 +136,32 @@ const Shop = (props) => {
                       >
                         {product.name}
                       </Typography>
-                      <Typography
-                        sx={{ alignContent: "center" }}
-                        variant="h5"
-                        color="#000"
-                      >
-                        {product.price + " RON"}
-                      </Typography>
                     </CardContent>
                   </CardActionArea>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      Add to cart
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Link>
+                </Link>
+                <CardActions
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    margin: "0.5rem",
+                  }}
+                >
+                  <Typography
+                    sx={{ alignContent: "center" }}
+                    variant="h5"
+                    color="#000"
+                  >
+                    {product.price + " RON"}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "#2B8AD7" }}
+                  >
+                    <ShoppingCartOutlined />
+                  </Button>
+                </CardActions>
+              </Card>
             </div>
           ))}
         </div>
