@@ -90,7 +90,7 @@ const Shop = (props) => {
   }, []);
 
   function addToCart(product) {
-    localStorage.setItem("cart", "");
+    //localStorage.setItem("cart", "");
     if (localStorage.getItem("cart")) {
       cart = JSON.parse(localStorage.getItem("cart"));
     }

@@ -105,6 +105,22 @@ const Cart = (props) => {
     console.log(cart);
   }
 
+  function removeFromCart(product) {
+    //localStorage.setItem("cart", "");
+    if (localStorage.getItem("cart")) {
+      cart = JSON.parse(localStorage.getItem("cart"));
+    }
+    var quantity;
+    cart.map((item, index) => {
+      if (item.product.id === product.id) {
+        quantity = item.quantity - 1;
+        cart.at(index).quantity = quantity;
+      }
+    });
+    localStorage.setItem("cart", JSON.stringify(cart));
+    console.log(cart);
+  }
+
   return (
     <div className="cart-page">
       <Header />
@@ -123,12 +139,19 @@ const Cart = (props) => {
                     variant="text"
                     onClick={() => {
                       addToCart(item.product);
+                      window.location.reload();
                     }}
                   >
                     <AddIcon></AddIcon>
                   </Button>
                   <p className="quantity">{item.quantity}</p>
-                  <Button variant="text">
+                  <Button
+                    variant="text"
+                    onClick={() => {
+                      removeFromCart(item.product);
+                      window.location.reload();
+                    }}
+                  >
                     <RemoveIcon></RemoveIcon>
                   </Button>
                 </div>
