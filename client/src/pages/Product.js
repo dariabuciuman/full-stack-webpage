@@ -10,6 +10,7 @@ const Product = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
+  let cart = [];
 
   async function getImage(imageName) {
     try {
@@ -53,6 +54,24 @@ const Product = (props) => {
     }
   }, []);
 
+  function addToCart(product) {
+    if (localStorage.getItem("cart")) {
+      cart = JSON.parse(localStorage.getItem("cart"));
+    }
+    var quantity = 1;
+    var added = false;
+    cart.map((item, index) => {
+      if (item.product.id === product.id) {
+        quantity = item.quantity + 1;
+        cart.at(index).quantity = quantity;
+        added = true;
+      }
+    });
+    if (added === false) cart.push({ product: product, quantity: quantity });
+    localStorage.setItem("cart", JSON.stringify(cart));
+    console.log(cart);
+  }
+
   return (
     <div className="product-page">
       <Header />
@@ -73,7 +92,15 @@ const Product = (props) => {
           </div>
           <p>{state.product.description}</p>
           <div className="product-buttons">
-            <button className="add-to-cart">Add to cart</button>
+            <button
+              className="add-to-cart"
+              onClick={() => {
+                console.log("clicked " + state.product.id);
+                addToCart(state.product);
+              }}
+            >
+              Add to cart
+            </button>
           </div>
         </div>
       </div>

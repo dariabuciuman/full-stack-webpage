@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Product from "./pages/Product";
 import Products from "./pages/Products";
+import Cart from "./pages/Cart";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/register" exact element={<Register />} />
           <Route path="/shop" exact element={<Shop />} />
           <Route path="/shop/:id" exact element={<Product />} />
+          <Route path="cart" exact element={<Cart />} />
           <Route element={<ProtectedRoutes />}>
             <Route path="/account" exact element={<Account />} />
             <Route path="/admin" exact element={<Admin />} />

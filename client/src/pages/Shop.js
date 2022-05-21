@@ -17,7 +17,7 @@ const Shop = (props) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [images, setImages] = useState([]);
-
+  let cart = [];
   // const useStyles = makeStyles({
   //   root: {
   //     backgroundColor: "red",
@@ -89,6 +89,25 @@ const Shop = (props) => {
     }
   }, []);
 
+  function addToCart(product) {
+    localStorage.setItem("cart", "");
+    if (localStorage.getItem("cart")) {
+      cart = JSON.parse(localStorage.getItem("cart"));
+    }
+    var quantity = 1;
+    var added = false;
+    cart.map((item, index) => {
+      if (item.product.id === product.id) {
+        quantity = item.quantity + 1;
+        cart.at(index).quantity = quantity;
+        added = true;
+      }
+    });
+    if (added === false) cart.push({ product: product, quantity: quantity });
+    localStorage.setItem("cart", JSON.stringify(cart));
+    console.log(cart);
+  }
+
   return (
     <div className="everything1">
       <Header />
@@ -157,6 +176,10 @@ const Shop = (props) => {
                   <Button
                     variant="contained"
                     sx={{ backgroundColor: "#2B8AD7" }}
+                    onClick={() => {
+                      alert(product.id);
+                      addToCart(product);
+                    }}
                   >
                     <ShoppingCartOutlined />
                   </Button>

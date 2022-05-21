@@ -88,6 +88,9 @@ const Header = () => {
                 </NavDropdown.Item>
               </NavDropdown>
             )}
+            <Nav.Link className="navbar-text" href="/cart">
+              Cart
+            </Nav.Link>
             {admin && (
               <NavDropdown
                 title="Admin"

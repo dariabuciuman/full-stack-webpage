@@ -1,0 +1,36 @@
+.cart-dash {
+  background-color: #f8f8f8;
+  height: 93.5vh;
+  width: 100%;
+  margin-top: 60px;
+  padding: 50px;
+  color: #0f0f0f;
+  display: flex;
+  flex-direction: row;
+}
+.item-list {
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+}
+.cart-items {
+  width: 60%;
+}
+.item-text {
+  padding-left: 20px;
+}
+.subtotal {
+  width: 40%;
+}
+.item-picture > img {
+  object-fit: contain;
+}
+.item-quantity {
+  display: flex;
+  flex-direction: row;
+}
+.quantity {
+  margin-bottom: 0;
+  margin-top: 2px;
+  font-size: x-large;
+}

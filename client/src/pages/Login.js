@@ -25,7 +25,7 @@ function Login() {
     if (data.user) {
       localStorage.setItem("token", data.user);
       alert("Login successful");
-      window.location.href = "/dashboard";
+      window.location.href = "/";
     } else {
       console.log("does not exist");
       alert("Please check your username and password");
