@@ -13,21 +13,24 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import { useState, useEffect } from "react";
+import { color } from "@mui/system";
 
-export default function AddProductDialog({
+export default function EditProductDialog({
   isDialogOpened,
   handleCloseDialog,
+  _product,
 }) {
-  const [productID, setProductID] = React.useState("");
-  const [productName, setProductName] = React.useState("");
-  const [manufacturer, setManufacturer] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [categoryName, setCategoryName] = React.useState([]);
-  const [productSize, setProductSize] = React.useState("");
-  const [productColor, setProductColor] = React.useState("");
-  const [productPrice, setProductPrice] = React.useState("");
-  const [countInStock, setCountInStock] = React.useState("");
+  const [productName, setProductName] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [description, setDescription] = useState("");
+  const [categoryName, setCategoryName] = useState([]);
+  const [productSize, setProductSize] = useState("");
+  const [productColor, setProductColor] = useState("");
+  const [productPrice, setProductPrice] = useState("");
+  const [countInStock, setCountInStock] = useState("");
   const [image, setImage] = React.useState("");
+  const [wereChanges, setWereChanges] = useState(false);
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -65,79 +68,87 @@ export default function AddProductDialog({
   }
   const theme = useTheme();
 
-  const addID = (event) => {
-    setProductID(event.target.value);
-  };
   const addName = (event) => {
+    console.log("Add name");
+    setWereChanges(true);
     setProductName(event.target.value);
+    console.log(productName);
   };
   const addManufacturer = (event) => {
+    setWereChanges(true);
     setManufacturer(event.target.value);
   };
   const addDescription = (event) => {
+    setWereChanges(true);
     setDescription(event.target.value);
   };
   const addSize = (event) => {
+    setWereChanges(true);
     setProductSize(event.target.value);
   };
   const addColor = (event) => {
+    setWereChanges(true);
     setProductColor(event.target.value);
   };
   const addPrice = (event) => {
+    setWereChanges(true);
     setProductPrice(event.target.value);
   };
   const addStock = (event) => {
+    setWereChanges(true);
     setCountInStock(event.target.value);
   };
   const addImage = (event) => {
+    setWereChanges(true);
     console.log(event.target.files[0]);
     setImage(event.target.files[0]);
   };
   const addCategories = (event) => {
+    setWereChanges(true);
     const {
       target: { value },
     } = event;
     setCategoryName(typeof value === "string" ? value.split(",") : value);
   };
 
-  async function addProduct() {
-    let fileName = "product_" + productID + ".jpg";
-    const formData = new FormData();
-    formData.append("image", image, fileName);
+  async function editProduct() {
+    console.log(productColor);
+    if (image) {
+      let fileName = "product_" + _product.id + ".jpg";
+      const formData = new FormData();
+      formData.append("image", image, fileName);
 
-    const res = await fetch("http://localhost:5000/api/admin/uploadImage", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Accept: "multipart/form-data",
-        "admin-access-token": localStorage.getItem("token"),
-      },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("Uploaded");
+      const res = await fetch("http://localhost:5000/api/admin/uploadImage", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "multipart/form-data",
+          "admin-access-token": localStorage.getItem("token"),
+        },
+        credentials: "include",
       })
-      .catch((err) => console.error(err));
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("Uploaded");
+        })
+        .catch((err) => console.error(err));
+    }
 
-    const req = await fetch("http://localhost:5000/api/admin/addProduct", {
-      method: "POST",
+    const req = await fetch("http://localhost:5000/api/admin/editProduct", {
+      method: "PUT",
       headers: {
         "admin-access-token": localStorage.getItem("token"),
         "Content-Type": "application/json",
+        product_id: _product.id,
+        new_name: productName,
+        new_manufacturer: manufacturer,
+        new_description: description,
+        new_categories: categoryName,
+        new_size: productSize,
+        new_color: productColor,
+        new_price: productPrice,
+        new_stock: countInStock,
       },
-      body: JSON.stringify({
-        id: productID,
-        name: productName,
-        manufacturer: manufacturer,
-        description: description,
-        image: fileName,
-        categories: categoryName,
-        size: productSize,
-        color: productColor,
-        price: productPrice,
-        countInStock: countInStock,
-      }),
     });
     const data = await req.json();
     if (data.status === "ok") {
@@ -151,10 +162,43 @@ export default function AddProductDialog({
     );
   }
 
-  const handleAdd = () => {
-    addProduct();
+  const handleEdit = () => {
+    if (productName === "") {
+      setProductName(_product.name);
+      console.log("No name => " + _product.name);
+    }
+    if (manufacturer === "") {
+      setManufacturer(_product.manufacturer);
+      console.log("No manuf => " + _product.manufacturer);
+    }
+    if (description === "") {
+      setDescription(_product.description);
+      console.log("No descr => " + _product.description);
+    }
+    if (categoryName === []) {
+      setCategoryName(_product.categories);
+      console.log("No cats => " + _product.categories);
+    }
+    if (productSize === "") {
+      setProductSize(_product.size);
+      console.log("No size => " + _product.size);
+    }
+    if (productColor === "") {
+      setProductColor(_product.color);
+      console.log("No color => " + _product.color);
+    }
+    if (productPrice === "") {
+      setProductPrice(_product.price);
+    }
+    if (countInStock == "") setCountInStock(_product.countInStock);
+
+    console.log(wereChanges);
+    if (wereChanges === true) {
+      editProduct();
+      console.log("Were changes");
+      setWereChanges(false);
+    } else console.log("No changes");
     handleCloseDialog(false);
-    window.location.reload();
   };
 
   const handleClose = () => {
@@ -164,7 +208,7 @@ export default function AddProductDialog({
   return (
     <div>
       <Dialog open={isDialogOpened} onClose={handleClose}>
-        <DialogTitle>Add product</DialogTitle>
+        <DialogTitle>Edit product</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To subscribe to this website, please enter your email address here.
@@ -174,12 +218,13 @@ export default function AddProductDialog({
             required
             margin="dense"
             id="id"
-            label="Product ID"
+            label="Product ID (non-editable)"
             type="text"
             fullWidth
             variant="standard"
-            onChange={addID}
+            value={_product.id}
           />
+
           <TextField
             required
             margin="dense"
@@ -190,6 +235,7 @@ export default function AddProductDialog({
             variant="standard"
             onChange={addName}
           />
+          <p>Old: {_product.name}</p>
           <TextField
             required
             margin="dense"
@@ -200,6 +246,7 @@ export default function AddProductDialog({
             variant="standard"
             onChange={addManufacturer}
           />
+          <p>Old: {_product.manufacturer}</p>
           <TextField
             required
             margin="dense"
@@ -210,6 +257,7 @@ export default function AddProductDialog({
             variant="standard"
             onChange={addDescription}
           />
+          <p>Old: {_product.description}</p>
           <InputLabel id="categories">Categories</InputLabel>
           <Select
             labelId="categories"
@@ -249,6 +297,7 @@ export default function AddProductDialog({
               </MenuItem>
             ))}
           </Select>
+          <p>Old: {JSON.stringify(_product.categories)}</p>
           <TextField
             required
             margin="dense"
@@ -259,6 +308,7 @@ export default function AddProductDialog({
             variant="standard"
             onChange={addSize}
           />
+          <p>Old: {_product.size}</p>
           <TextField
             required
             margin="dense"
@@ -269,6 +319,7 @@ export default function AddProductDialog({
             variant="standard"
             onChange={addColor}
           />
+          <p>Old: {_product.color}</p>
           <TextField
             required
             margin="dense"
@@ -279,6 +330,7 @@ export default function AddProductDialog({
             variant="standard"
             onChange={addPrice}
           />
+          <p>Old: {_product.price}</p>
           <TextField
             required
             margin="dense"
@@ -289,6 +341,7 @@ export default function AddProductDialog({
             variant="standard"
             onChange={addStock}
           />
+          <p>Old: {_product.countInStock}</p>
           <label htmlFor="contained-button-file">
             <input
               accept="image/*"
@@ -297,10 +350,11 @@ export default function AddProductDialog({
               onChange={addImage}
             />
           </label>
+          <p>Old: {_product.image}</p>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleAdd}>
-            Add
+          <Button variant="outlined" onClick={handleEdit}>
+            Save
           </Button>
           <Button onClick={handleClose}>Cancel</Button>
         </DialogActions>

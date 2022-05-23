@@ -7,6 +7,7 @@
   color: #0f0f0f;
   display: flex;
   flex-direction: row;
+  font-family: "Poppins", sans-serif;
 }
 .item-list {
   display: flex;
@@ -20,6 +21,7 @@
   padding-left: 20px;
 }
 .subtotal {
+  padding-top: 16px;
   width: 40%;
 }
 .item-picture > img {
@@ -33,4 +35,15 @@
   margin-bottom: 0;
   margin-top: 2px;
   font-size: x-large;
+}
+.checkout {
+  height: 5vh;
+  width: 7vw;
+  background-color: #0f0f0f;
+  color: #f8f8f8;
+  border-style: none;
+}
+.subtotal > p {
+  font-size: larger;
+  padding-top: 10px;
 }

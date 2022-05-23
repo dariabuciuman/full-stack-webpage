@@ -12,6 +12,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import Product from "./pages/Product";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
+import Orders from "./pages/Orders";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/admin" exact element={<Admin />} />
             <Route path="/users" exact element={<Users />} />
             <Route path="/products" exact element={<Products />} />
+            <Route path="/orders" exact element={<Orders />} />
           </Route>
         </Routes>
       </BrowserRouter>

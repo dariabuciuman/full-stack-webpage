@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/user.model");
 const Product = require("./models/product.model");
+const Order = require("./models/order.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
@@ -97,15 +98,6 @@ app.post("/api/admin/addProduct", async (req, res) => {
   }
 });
 
-app.get("/api/getProducts", async (req, res) => {
-  try {
-    const products = await Product.find({}, { _id: 0, __v: 0 });
-    return res.json({ status: "ok", products: products });
-  } catch (error) {
-    res.send({ status: "error", error: error });
-  }
-});
-
 app.delete("/api/admin/deleteProduct", async (req, res) => {
   const token = req.headers["admin-access-token"];
   console.log(req.headers.product_id);
@@ -123,6 +115,73 @@ app.delete("/api/admin/deleteProduct", async (req, res) => {
     } else return res.json({ status: "error" });
   } catch (error) {
     return res.json({ status: "error", error: "Couldn't delete product" });
+  }
+});
+
+app.put("/api/admin/editProduct", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  console.log("In editProduct");
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      try {
+        const updated = await Product.updateOne(
+          {
+            id: req.headers.product_id,
+          },
+          {
+            $set: {
+              name: req.headers.new_name,
+              manufacturer: req.headers.new_manufacturer,
+              description: req.headers.new_description,
+              categories: req.headers.new_categories,
+              size: req.headers.new_size,
+              color: req.headers.new_color,
+              price: req.headers.new_price,
+              countInStock: req.headers.new_stock,
+            },
+          }
+        );
+        return res.json({ status: "ok", state: "updated" });
+      } catch (error) {
+        console.log(error);
+      }
+    } else return res.json({ status: "error" });
+  } catch (error) {
+    return res.json({ status: "error", error: "Couldn't update product" });
+  }
+});
+
+app.get("/api/admin/getProduct", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      try {
+        const product = await Product.findOne(
+          { id: req.headers.product_id },
+          { _id: 0, __v: 0 }
+        );
+        return res.json({ status: "ok", product: product });
+      } catch (error) {
+        res.send({ status: "error", error: error });
+      }
+    } else return res.json({ status: "Unauthorized" });
+  } catch (error) {
+    return res.json({ status: "error", error: "Couldn't get product" });
+  }
+});
+
+app.get("/api/getProducts", async (req, res) => {
+  try {
+    const products = await Product.find({}, { _id: 0, __v: 0 });
+    return res.json({ status: "ok", products: products });
+  } catch (error) {
+    res.send({ status: "error", error: error });
   }
 });
 
@@ -354,25 +413,150 @@ app.put("/api/admin/changeUser", async (req, res) => {
   }
 });
 
-app.post("/api/admin/addProduct", async (req, res) => {
-  console.log(req.body);
+app.get("/api/getProductID", async (req, res) => {
+  try {
+    const product = await Product.findOne(
+      { id: req.headers.product_id },
+      {
+        name: 0,
+        id: 0,
+        manufacturer: 0,
+        description: 0,
+        image: 0,
+        categories: 0,
+        size: 0,
+        color: 0,
+        price: 0,
+        countInStock: 0,
+        __v: 0,
+      }
+    );
+    return res.json({ status: "ok", productID: product });
+  } catch (error) {
+    res.send({ status: "error", error: error });
+  }
+});
+
+app.post("/api/addOrder", async (req, res) => {
+  const token = req.headers["x-access-token"];
 
   try {
-    await Product.create({
-      name: req.body.name,
-      manufacturer: req.body.manufacturer,
-      description: req.body.description,
-      image: req.body.image,
-      categories: req.body.categories,
-      size: req.body.size,
-      color: req.body.color,
-      price: req.body.price,
-      countInStock: req.body.countInStock,
-    });
-    res.json({ status: "ok" });
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    console.log("email: " + email);
+    const user = await User.findOne({ email: email });
+    if (user) {
+      try {
+        await Order.create({
+          products: req.body.products,
+          userID: user._id,
+          totalPrice: req.body.totalPrice,
+          number: req.body.number,
+          street: req.body.street,
+          city: req.body.city,
+          county: req.body.county,
+          country: req.body.country,
+          zipcode: req.body.zipcode,
+        });
+        return res.json({ status: "ok", state: "created" });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   } catch (error) {
     console.log(error);
-    res.json({ status: "error", error: "Cannot add product" });
+    res.json({ status: "error", error: "Couldn't place order" });
+  }
+});
+
+app.get("/api/admin/getProductByID", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      try {
+        const product = await Product.findOne(
+          { _id: req.headers._id },
+          { __v: 0 }
+        );
+        return res.json({ status: "ok", product: product });
+      } catch (error) {
+        res.send({ status: "error", error: error });
+      }
+    } else return res.json({ status: "Unauthorized" });
+  } catch (error) {
+    return res.json({ status: "error", error: "Couldn't get product" });
+  }
+});
+
+app.get("/api/admin/getOrders", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      try {
+        const orders = await Order.find({}, { __v: 0 });
+        var users = [];
+        for (i = 0; i < orders.length; i++) {
+          var u = await User.findOne(
+            { _id: orders[i].userID },
+            { __v: 0, password: 0 }
+          );
+          users.push(u);
+        }
+        var products = [];
+        for (i = 0; i < orders.length; i++) {
+          var prods = [];
+          for (j = 0; j < orders[i].products.length; j++) {
+            var p = await Product.findOne(
+              { _id: orders[i].products[j].productID },
+              { __v: 0, password: 0 }
+            );
+            prods.push(p);
+          }
+          products.push(prods);
+        }
+        console.log(products);
+        return res.json({
+          status: "ok",
+          orders: orders,
+          users: users,
+          products: products,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", error: "Couldn't get orders" });
+  }
+});
+
+app.get("/api/admin/getUserByID", async (req, res) => {
+  const token = req.headers["admin-access-token"];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user.role === "admin") {
+      try {
+        const user = await User.findOne(
+          { _id: req.headers._id },
+          { __v: 0, password: 0 }
+        );
+        return res.json({ status: "ok", user: user });
+      } catch (error) {
+        res.send({ status: "error", error: error });
+      }
+    } else return res.json({ status: "Unauthorized" });
+  } catch (error) {
+    return res.json({ status: "error", error: "Couldn't get user" });
   }
 });
 

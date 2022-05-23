@@ -29,14 +29,14 @@ const Header = () => {
       if (!user) {
         console.log(localStorage.getItem("token"));
         localStorage.removeItem("token");
-        navigate("/login", { replace: true });
+        //navigate("/login", { replace: true });
         setLoggedIn(false);
       } else {
         verifyAdmin();
       }
     } else {
       setLoggedIn(false);
-      navigate("/login", { replace: true });
+      //navigate("/login", { replace: true });
     }
   }, []);
 
@@ -88,9 +88,11 @@ const Header = () => {
                 </NavDropdown.Item>
               </NavDropdown>
             )}
+
             <Nav.Link className="navbar-text" href="/cart">
               Cart
             </Nav.Link>
+
             {admin && (
               <NavDropdown
                 title="Admin"

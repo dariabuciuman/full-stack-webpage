@@ -38,7 +38,7 @@ function Login() {
       <div className="loginForm">
         <h1>Login</h1>
         <h3>Welcome back, it's grape to see you.</h3>
-        <form className="form" onSubmit={loginUser}>
+        <form onSubmit={loginUser}>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}

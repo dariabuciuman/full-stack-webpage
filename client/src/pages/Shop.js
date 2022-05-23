@@ -85,7 +85,8 @@ const Shop = (props) => {
       }
     } else {
       console.log("else");
-      navigate("/login", { replace: true });
+      populateProducts();
+      //navigate("/login", { replace: true });
     }
   }, []);
 

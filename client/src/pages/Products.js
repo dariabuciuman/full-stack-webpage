@@ -7,11 +7,18 @@ import Header from "../utils/Header";
 import jwt from "jsonwebtoken";
 import MaterialTable from "material-table";
 import tableIcons from "../utils/MaterialTableIcons";
+import EditProductDialog from "../utils/EditProductDialog";
+
+import TextField from "@mui/material/TextField";
 
 const Products = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [product, setProduct] = useState([]);
+  const [productName, setProductName] = React.useState("");
+  const [productID, setProductID] = useState(0);
 
   const columns = [
     { title: "ID", field: "id" },
@@ -33,6 +40,22 @@ const Products = () => {
     } else {
       alert(data.error);
     }
+  }
+
+  async function getProduct(id) {
+    const req = await fetch("http://localhost:5000/api/admin/getProduct", {
+      method: "GET",
+      headers: {
+        "admin-access-token": localStorage.getItem("token"),
+        product_id: id,
+      },
+    });
+    const data = await req.json();
+    if (data.status === "ok") {
+      console.log(data.product);
+      setProduct(data.product);
+      setProductName(data.product.name);
+    } else alert("Couldn't get product");
   }
 
   async function deleteProduct(id) {
@@ -73,7 +96,10 @@ const Products = () => {
   }
 
   function editButton(id) {
-    navigate();
+    getProduct(id);
+    setProductID(id);
+    console.log(product);
+    setIsOpenEdit(!isOpenEdit);
   }
 
   function loadProducts(event) {
@@ -83,6 +109,10 @@ const Products = () => {
 
   const handleOpen = () => {
     setIsOpen(!isOpen);
+  };
+
+  const addName = (event) => {
+    setProductName(event.target.value);
   };
 
   return (
@@ -132,10 +162,27 @@ const Products = () => {
             },
           }}
         />
+        <TextField
+          required
+          margin="dense"
+          id="name"
+          label="Product name"
+          type="text"
+          fullWidth
+          variant="standard"
+          value={productName}
+          onChange={addName}
+        />
         <AddProductDialog
           isDialogOpened={isOpen}
           handleCloseDialog={() => setIsOpen(false)}
         ></AddProductDialog>
+        <EditProductDialog
+          isDialogOpened={isOpenEdit}
+          handleCloseDialog={() => setIsOpenEdit(false)}
+          _product={product}
+          _productID={productID}
+        ></EditProductDialog>
         <form className="form" onSubmit={loadProducts}>
           <input
             className="refresh-button"
