@@ -76,6 +76,9 @@ const Header = () => {
                 <NavDropdown.Item className="navbar-text" href="/account">
                   Profile
                 </NavDropdown.Item>
+                <NavDropdown.Item className="navbar-text" href="/userOrders">
+                  My Orders
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item
                   className="navbar-text"

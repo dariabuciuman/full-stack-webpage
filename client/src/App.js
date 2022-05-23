@@ -13,6 +13,7 @@ import Product from "./pages/Product";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
+import UserOrders from "./pages/UserOrders";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="/users" exact element={<Users />} />
             <Route path="/products" exact element={<Products />} />
             <Route path="/orders" exact element={<Orders />} />
+            <Route path="/userOrders" exact element={<UserOrders />} />
           </Route>
         </Routes>
       </BrowserRouter>

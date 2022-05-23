@@ -538,6 +538,44 @@ app.get("/api/admin/getOrders", async (req, res) => {
   }
 });
 
+app.get("/api/admin/getOrdersByUser", async (req, res) => {
+  const token = req.headers["x-access-token"];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    if (user) {
+      try {
+        const orders = await Order.find({ userID: user._id }, { __v: 0 });
+        var products = [];
+        for (i = 0; i < orders.length; i++) {
+          var prods = [];
+          for (j = 0; j < orders[i].products.length; j++) {
+            var p = await Product.findOne(
+              { _id: orders[i].products[j].productID },
+              { __v: 0, password: 0 }
+            );
+            prods.push(p);
+          }
+          products.push(prods);
+        }
+        console.log(products);
+        return res.json({
+          status: "ok",
+          orders: orders,
+          products: products,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", error: "Couldn't get orders" });
+  }
+});
+
 app.get("/api/admin/getUserByID", async (req, res) => {
   const token = req.headers["admin-access-token"];
   try {
